@@ -38,24 +38,24 @@ sns.set_theme(style='white', palette='husl')
 
 def data_review(dataset):
     '''
-    на вход принимает датафрейм,
-    выводит общую обзорную информацию
+    Takes a dataframe as input,
+    outputs general overview information
     '''
-    print('Общая информация о наборе данных:')
+    print('General information about the dataset:')
     dataset.info()
     print()
-    print('Первые пять строк набора данных:')
+    print('First five rows of the dataset:')
     display(dataset.head())
     print()
-    print(f"количество полных дубликатов строк: {dataset.duplicated().sum()}")
+    print(f"Number of complete duplicate rows: {dataset.duplicated().sum()}")
     print()
-    print(f"""количество пропущенных значений: 
+    print(f"""Number of missing values: 
     {dataset.isna().sum()}""")
     print()
-    print('Вывод количества уникальных записей в каждом числовом признаке:')
+    print('Output of the number of unique records in each numeric feature:')
     for column in dataset.select_dtypes(include=['int', 'float']).columns:
         unique_values = dataset[column].nunique()
-        print(f"Количество уникальных записей в признаке '{column}': {unique_values}")
+        print(f"Number of unique records in feature '{column}': {unique_values}")
 
 def data_preprocessing(test_size=0.1, dataset=None, features=None, target=None, transformations=None):
     X_train, X_test, y_train, y_test = train_test_split(dataset[features],
@@ -67,13 +67,13 @@ def data_preprocessing(test_size=0.1, dataset=None, features=None, target=None, 
         afc = AutoFeatClassifier(feateng_steps=1, max_gb=2, transformations=transformations, n_jobs=-1)
         X_train = afc.fit_transform(X_train, y_train)
         X_test = afc.transform(X_test)
-        print('Автоматическая генерация признаков завершена')
+        print('Automatic feature generation completed')
 
     scaler = StandardScaler()
     X_train_scl = pd.DataFrame(scaler.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
     X_test_scl = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns, index=X_test.index)
 
-    print(f'размерности выборок: {X_train_scl.shape, X_test_scl.shape, y_train.shape, y_test.shape}')
+    print(f'Sample dimensions: {X_train_scl.shape, X_test_scl.shape, y_train.shape, y_test.shape}')
     return X_train_scl, X_test_scl, y_train, y_test
 
 def model_fitting(model_name=None, features_train=None, target_train=None, n_splits=None, params=None, tune_hyperparams=False):
@@ -93,7 +93,7 @@ def model_fitting(model_name=None, features_train=None, target_train=None, n_spl
                                 scoring='roc_auc')
         clf = cv.fit(features_train, target_train)
         best_params = clf.best_params_
-        print(f"Лучшие гиперпараметры: {best_params}")
+        print(f"Best hyperparameters: {best_params}")
     else:
         best_params = params
 
@@ -113,7 +113,7 @@ def model_fitting(model_name=None, features_train=None, target_train=None, n_spl
                             scoring=['roc_auc', 'f1_micro', 'f1', 'f1_weighted', 'f1_macro'])
     for key, value in cv_res.items():
         cv_res[key] = round(value.mean(), 3)
-    print(f"результаты кросс-вадидации: {cv_res}")
+    print(f"Cross-validation results: {cv_res}")
     y_pred = model.predict(features_train.values)
     y_pred_proba = model.predict_proba(features_train.values)[:, 1]
 				
@@ -217,8 +217,8 @@ def test_best_model(model_name=None, model=None, features_train=None, features_t
     y_pred = model.predict(features_test.values)
     f1_value = f1_score(target_test, y_pred)
         
-    print(f"ROC-AUC на тестовой выборке: {round(roc_auc_value, 2)}")
-    print(f"F1 на тестовой выборке: {round(f1_value, 2)}")
+    print(f"ROC-AUC on test set: {round(roc_auc_value, 2)}")
+    print(f"F1 on test set: {round(f1_value, 2)}")
 
     fig, axs = plt.subplots(1, 2)
     fig.tight_layout(pad=1.0)
