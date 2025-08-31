@@ -198,3 +198,48 @@ This project is available under the MIT License.
 - Model files are excluded from git due to size (use Git LFS if needed)
 - Ensure proper environment variables are set for database connections
 - The monitoring stack requires Docker Compose for full functionality
+
+## 🔍 Research Methodology
+
+### Data Analysis Process
+1. **Data Loading & Exploration**: Understanding dataset structure and quality
+2. **Exploratory Data Analysis**: Feature correlations and distribution analysis
+3. **Data Preprocessing**: Feature scaling and engineering when needed
+4. **Baseline Model Development**: Starting with Logistic Regression for simplicity
+5. **Advanced Model Training**: Random Forest and LightGBM implementations
+6. **Model Selection**: Comparing performance using ROC-AUC and F1 metrics
+7. **Feature Importance Analysis**: Understanding key predictive factors
+8. **Final Evaluation**: Testing best model on holdout dataset
+
+### Key Findings
+
+**Metric Selection Rationale:**
+- **ROC-AUC**: Ideal for binary classification, balances True Positive and True Negative rates
+- **F1-Score**: Harmonic mean of precision and recall, effective for balanced datasets
+
+**Model Performance Summary:**
+- **Data Quality**: Clean dataset with minimal preprocessing required
+- **Feature Engineering**: Additional features improved model performance
+- **Best Model**: LightGBM with hyperparameter tuning achieved optimal results
+- **Test Performance**: ROC-AUC = 0.82 on holdout dataset
+- **Prediction Accuracy**: 39,092 true negatives, 34,393 true positives
+- **Misclassifications**: 12,124 false positives, 13,430 false negatives
+
+**Most Important Features:**
+1. Advertisement visibility percentage (`rv_perc`)
+2. Click-through rate value (`ctr_sort`)
+3. Bid rate in rubles (`rate`)
+4. Advertisement category (`rubrica`)
+5. Behavioral targeting value (`tags_bhv`)
+
+### Recommendations for Improvement
+
+To achieve higher prediction quality, additional data would be beneficial:
+- **User Demographics**: Age, gender, interests, browsing history
+- **Temporal Features**: Time series data, seasonality, day-of-week patterns
+- **Contextual Information**: Device type, location precision, weather data
+- **Engagement Metrics**: Previous click patterns, session duration
+
+### Conclusion
+
+**LightGBM is the optimal solution for this ad click prediction task**, providing the best balance of accuracy, interpretability, and production readiness with comprehensive MLflow tracking and FastAPI deployment capabilities.
